@@ -1,24 +1,59 @@
-import logo from './logo.svg';
-import './App.css';
+import * as React from 'react'
+import { CssBaseline } from '@mui/material';
+
+import Navbar from './Navbar';
+
+import Home from './Home';
+
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import Create from './Create';
+import BlogDetails from './BlogDetails';
+import Explore from './Explore';
+import NotFound from './NotFound';
+import {ThemeProvider} from '@mui/material/styles';
+import theme from './theme';
+import { Provider } from 'react-redux';
+import { createStore } from 'redux';
+import rootReducer from './store';
+
+const store = createStore(rootReducer)
 
 function App() {
+
   return (
+    <Provider store={store}>
+    <ThemeProvider theme={theme}>
+    <React.Fragment>
+      <CssBaseline />
+    <Router>
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Navbar/>
+      <div className="content">
+        <Switch>
+          <Route exact path = "/">
+            <Home />
+          </Route>
+
+          <Route path = "/create">
+            <Create />
+          </Route>
+
+          <Route path = "/explore">
+            <Explore/>
+          </Route>
+          <Route path = "/blogs/:id">
+            <BlogDetails />
+          </Route>
+          <Route path = "*">
+            <NotFound />
+          </Route>
+        </Switch>
+      </div>
     </div>
+    </Router>
+    </React.Fragment>
+    </ThemeProvider>
+    </Provider>
   );
 }
 
