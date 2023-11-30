@@ -14,29 +14,46 @@ const Create = () => {
     const userId = useSelector((state) => state.user.userId)
 
     useEffect(() => {
-        console.log(userId);
+  
     }, [userId])
 
     const history = useHistory()
 
     const handleSubmit = (e) => {
         e.preventDefault()
-        const blog = { title, body, author};
+        const blog = { userID: userId,title, body, author, tags: selectedChips};
         
         setIsPending(true)
         //mock api
-        fetch('http://localhost:8000/blogs', {
-            method: 'POST',
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify(blog)
-        }).then (() => {
-            console.log("New Blog Added!");
-            setIsPending(false)
-            history.push('/')
-        })
+        // fetch('http://localhost:8000/blogs', {
+        //     method: 'POST',
+        //     headers: {"Content-Type": "application/json"},
+        //     body: JSON.stringify(blog)
+        // }).then (() => {
+        //     console.log("New Blog Added!");
+        //     setIsPending(false)
+        //     history.push('/')
+        // })
 
 
         //our api calls
+        fetch('http://localhost:3001/publishBlog', {
+          method: 'POST',
+          headers: {"Content-Type": "application/json"},
+          body: JSON.stringify(blog)
+        }).then((res) => {
+          if (!res.ok) {
+            throw new Error('Network response was not ok');
+          }
+          return res.json()
+        }).then((data) => {
+          console.log('Success:', data);
+        }).catch((error) => {
+          console.log(error);
+        }).finally(() => {
+          setIsPending(false)
+          // history.push('/')
+        })
         
     }
 
