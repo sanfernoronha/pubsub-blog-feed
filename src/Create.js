@@ -6,12 +6,14 @@ import { useSelector } from "react-redux";
 const Create = () => {
     const [title, setTitle] = useState("")
     const [body, setBody] = useState("")
-    const [author, setAuthor] = useState("mario")
     const [chipInput, setChipInput] = useState('')
     const [selectedChips, setSelectedChips] = useState([])
     const [isPending, setIsPending] = useState(false)
 
     const userId = useSelector((state) => state.user.userId)
+    const username = useSelector((state) => state.user.username)
+    
+    // console.log(username);
 
     useEffect(() => {
   
@@ -21,7 +23,7 @@ const Create = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault()
-        const blog = { userID: userId,title, body, author, tags: selectedChips};
+        const blog = { userID: userId,title, body, author: username, tags: selectedChips};
         
         setIsPending(true)
         //mock api
@@ -52,7 +54,7 @@ const Create = () => {
           console.log(error);
         }).finally(() => {
           setIsPending(false)
-          // history.push('/')
+          history.push('/')
         })
         
     }
@@ -115,14 +117,6 @@ const Create = () => {
                 onChange={(e) => setBody(e.target.value)}
                 ></textarea>
 
-                <label>Blog author:</label>
-                <select 
-                value={ author }
-                onChange={(e) => setAuthor(e.target.value)}
-                >
-                    <option value="mario">Mario</option>
-                    <option value="yoshi">Yoshi</option>
-                </select>
 
                 <label>Blog tags:</label>
 
