@@ -43,20 +43,20 @@ const BlogList = ({blogs, title}) => {
         <div>
             <h2>{title} !</h2>
             { blogs.map( (blog) => (
-                <Card key={blog.id} className="blog-preview">
+                <Card key={blog.blog_id} className="blog-preview">
                     <CardContent>
-                        <Link to={`/blogs/${blog.id}`} style={{ textDecoration: 'none', color: 'primary' }}>
+                        <Link to={`/blogs/${blog.blog_id}`} style={{ textDecoration: 'none', color: 'primary' }}>
                         <Typography variant="h6" component="h1" fontSize={20} color='primary' marginBottom={4}>
-                        {blog.title}
+                        {blog.blog_name}
                         </Typography>
                        
                         </Link>
                     </CardContent>
                     <CardActions className="tags" style={{ justifyContent: 'space-between'}}>
                         <div className="author-group">
-                            <Avatar {...stringAvatar(blog.author)}/>
+                            <Avatar {...stringAvatar(blog.blog_author)}/>
                             <Typography color="textSecondary">
-                            Written by {blog.author}
+                            Written by {blog.blog_author}
                             </Typography>
                         </div>
                         <div className="tag-group">

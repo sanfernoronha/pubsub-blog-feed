@@ -5,19 +5,27 @@ import { useSelector } from 'react-redux';
 import io from 'socket.io-client';
 
 const Home = () => {
-    const {data: blogs, isPending, error} = useFetch('http://localhost:8000/blogs')
+    const [blogs, setBlogs] = useState([])
     const userId = useSelector((state) => state.user.userId)
-    
-    useEffect(() => {
+    console.log(userId);
 
-      // create a socket on 3001 port
+    useEffect(() => {
+         // create a socket on 3001 port
       const socket = io('http://localhost:3001');
       // SOCKET: fetch blogs using user id 
-      socket.emit('getMyHome', userId);
-      socket.on('blogs', (blogs) => {
-        console.log(`Received `, blogs);
-      });
+      socket.emit('getMyHome', userId); 
+    //   socket.on('blogs', (blogs) => {
+    //     console.log(`Received `, blogs);
+    //   });
 
+      socket.on('newBlog', async (blog) => {
+        console.log(`Received `, blog);
+        await setBlogs((prevBlogs) => [...prevBlogs, blog])
+        console.log(blogs);
+      });
+    }, [userId])
+
+    useEffect(() => {
         // test our backend fetch
         const fetchData = async () => {
             try {
@@ -27,6 +35,7 @@ const Home = () => {
               }
               const data = await response.json();
               console.log(data);
+              setBlogs(data)
             } catch (error) {
               console.error('Error fetching data:', error);
             }
@@ -37,8 +46,6 @@ const Home = () => {
     
     return ( 
         <div className="home">
-            { error && <div> { error} </div> }
-            { isPending && <div>Loading...</div>}
             { blogs && <BlogList blogs = {blogs} title = "All Blogs" />  }
         </div>
      );

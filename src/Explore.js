@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import ChipSelection from './ChipSelection'
 import { useSelector } from 'react-redux';
 
@@ -9,6 +9,8 @@ export default function Explore() {
   
 
   const userId = useSelector((state) => state.user.userId)
+  const [unsubscribedTags, setUnsubscribedTags] = useState([])
+  
 
     useEffect(() => {
 
@@ -20,6 +22,7 @@ export default function Explore() {
           }
           const data = await response.json();
           console.log(data);
+          setUnsubscribedTags(data);
         } catch (error) {
           console.error('Error fetching data:', error);
         }
@@ -28,6 +31,9 @@ export default function Explore() {
     fetchData()
     }, [userId])
   return (
-    <ChipSelection title = "Explore more areas of interest !"/>
+    <div>
+      {unsubscribedTags && <ChipSelection tags={unsubscribedTags} title = "Explore more areas of interest !"/>} 
+    </div>
+    
   )
 }

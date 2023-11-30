@@ -2,11 +2,15 @@ import { Typography, Chip, IconButton } from '@mui/material'
 import React, { useState } from 'react'
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
+import { useSelector } from 'react-redux';
+import { useHistory } from 'react-router-dom/cjs/react-router-dom';
 
-const interestList = ['Music', 'Movies', 'Reading', 'Travel', 'Sports', 'Cooking']
 
+export default function ChipSelection({tags}) {
 
-export default function ChipSelection({chips, title}) {
+  const userId = useSelector((state) => state.user.userId)
+  const history = useHistory()
+  const interestList = tags
     
     const [selectedChips, setSelectedChips] = useState([])
     const handleChipClick = (interest) => {
@@ -22,9 +26,33 @@ export default function ChipSelection({chips, title}) {
       };
 
 
-      const handleAccept = () => {
+      const handleAccept = async () => {
         console.log('Accepted');
         console.log('Subscribing to ', selectedChips, 'topics')
+
+        try {
+          const response = await fetch(`http://localhost:3001/subscribe/${userId}`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ tags: selectedChips }),
+          });
+      
+          if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+          }
+      
+          const data = await response.json();
+          console.log(data.message); // Log the success message or handle as needed
+          history.push('/')
+          
+        } catch (error) {
+          console.error('Error subscribing to tags:', error);
+          // Handle the error, show a notification, or perform other actions
+        }
+        
+
         console.log('Redirecting to home page')
       }
 
